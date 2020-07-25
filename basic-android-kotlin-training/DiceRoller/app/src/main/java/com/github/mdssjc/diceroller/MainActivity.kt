@@ -2,7 +2,7 @@ package com.github.mdssjc.diceroller
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -14,19 +14,28 @@ class MainActivity : AppCompatActivity() {
         rollButton.setOnClickListener {
             rollDice()
         }
+        rollDice()
     }
 
+    /**
+     * Roll the dice and update the screen with the result.
+     */
     private fun rollDice() {
-        val dice1 = Dice(6)
-        val dice2 = Dice(6)
+        val dice = Dice(6)
+        val diceRoll = dice.roll()
 
-        val dice1Roll = dice1.roll()
-        val dice2Roll = dice2.roll()
+        val diceImage: ImageView = findViewById(R.id.imageView)
 
-        val resultLeftTextView: TextView = findViewById(R.id.textView)
-        val resultRigthTextView: TextView = findViewById(R.id.textView2)
+        val drawableResource = when (diceRoll) {
+            1 -> R.drawable.dice_1
+            2 -> R.drawable.dice_2
+            3 -> R.drawable.dice_3
+            4 -> R.drawable.dice_4
+            5 -> R.drawable.dice_5
+            else -> R.drawable.dice_6
+        }
 
-        resultLeftTextView.text = dice1Roll.toString()
-        resultRigthTextView.text = dice2Roll.toString()
+        diceImage.setImageResource(drawableResource)
+        diceImage.contentDescription = diceRoll.toString()
     }
 }
