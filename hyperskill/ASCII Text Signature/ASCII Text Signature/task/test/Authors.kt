@@ -1,3 +1,4 @@
+import java.lang.IllegalStateException
 import java.util.*
 
 class Letter(
