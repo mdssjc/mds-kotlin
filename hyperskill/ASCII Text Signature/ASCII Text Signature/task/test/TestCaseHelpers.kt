@@ -7,6 +7,7 @@ fun <T> testCase(attach: T, input: String) = TestCase<T>().apply {
     setInput(input)
     setAttach(attach)
 }
+
 class InputClue(
         val input: String,
         val isPrivate: Boolean = false,
@@ -29,5 +30,3 @@ fun inputCase(
         isPrivate: Boolean = false,
         hint: String? = null
 ) = testCase(InputClue(input, isPrivate, hint), input)
-
-

@@ -1,75 +1,70 @@
 package signature
 
+import java.io.File
+import java.util.*
+
 fun main() {
     print("Enter name and surname: ")
-    val name = readLine()!!.trim()
+    val name = readLine()!!
 
     print("Enter person's status: ")
-    val status = readLine()!!.trim()
+    val status = readLine()!!
 
     printSignature(name, status)
 }
 
 fun printSignature(name: String, status: String) {
-    val line = List(3) { mutableListOf<CharSequence>() }
+    val roman = Fonts(File("F:\\Repositorios\\mds-kotlin\\hyperskill\\ASCII Text Signature\\fonts\\roman.txt"))
+    val medium = Fonts(File("F:\\Repositorios\\mds-kotlin\\hyperskill\\ASCII Text Signature\\fonts\\medium.txt"))
 
-    for (ch in name.toUpperCase()) {
-        if (ch == ' ') line.forEach { it -> it.add(Font.space) } else
-            Font.valueOf(ch.toString()).run { line.forEachIndexed { i, ln -> ln.add(fontASCII[i]) } }
+    fun getLine(font: Fonts, str: String): Array<String?>? {
+        val size = font.letters['a']?.size
+        val line = size?.let { List(it) { mutableListOf<CharSequence>() } }
+        for (ch in str) {
+            if (ch == ' ') line!!.forEach { it -> font.space?.let { it1 -> it.add(it1) } } else
+                font.letters[ch].run { line!!.forEachIndexed { i, ln -> font.letters[ch]?.get(i)?.let { ln.add(it) } } }
+        }
+        val print = size?.let { Array(it) { i -> line?.get(i)?.joinToString("") } }
+        return print
     }
-    val print = Array(3) { i -> line[i].joinToString(" ") }
+
+    val nameLn = getLine(roman, name)
+    val nameLen = nameLn?.get(0)?.length
+    val statusLn = getLine(medium, status)
+    val statusLen = statusLn?.get(0)?.length
 
     val asteriskLine = {
-        println("*".repeat(maxOf(print[0].length, status.length)
-                + Font.indent * 2 + 2))
+        println("8".repeat((nameLen?.let { statusLen?.let { it1 -> maxOf(it, it1) } }
+                ?.plus(Fonts.indent * 2)!!) + 4))
     }
 
     fun statusIndent(right: Boolean = false): String {
-        val indentation = maxOf(print[0].length - status.length + Font.indent * 2, Font.indent * 2)
+        val indentation = maxOf(nameLen!! - statusLen!! + Fonts.indent * 2, Fonts.indent * 2)
         return " ".repeat(indentation / 2 + if (right) indentation % 2 else 0)
     }
 
     fun fontIndent(right: Boolean = false): String {
-        val indentation = status.length - print[0].length
-        return " ".repeat(maxOf(Font.indent, indentation / 2 + Font.indent + if (right) indentation % 2 else 0))
+        val indentation = statusLen!! - nameLen!!
+        return " ".repeat(maxOf(Fonts.indent, indentation / 2 + Fonts.indent + if (right) indentation % 2 else 0))
     }
 
     asteriskLine()
-    print.forEach { println("*${fontIndent()}$it${fontIndent(true)}*") }
-    println("*${statusIndent()}$status${statusIndent(true)}*")
+    nameLn!!.forEach { println("88${fontIndent()}$it${fontIndent(true)}88") }
+    statusLn!!.forEach { println("88${statusIndent()}$it${statusIndent(true)}88") }
     asteriskLine()
 }
 
-enum class Font(val fontASCII: List<CharSequence>) {
-    A(listOf("____", "|__|", "|  |")),
-    B(listOf("___ ", "|__]", "|__]")),
-    C(listOf("____", "|   ", "|___")),
-    D(listOf("___ ", "|  \\", "|__/")),
-    E(listOf("____", "|___", "|___")),
-    F(listOf("____", "|___", "|   ")),
-    G(listOf("____", "| __", "|__]")),
-    H(listOf("_  _", "|__|", "|  |")),
-    I(listOf("_", "|", "|")),
-    J(listOf(" _", " |", "_|")),
-    K(listOf("_  _", "|_/ ", "| \\_")),
-    L(listOf("_   ", "|   ", "|___")),
-    M(listOf("_  _", "|\\/|", "|  |")),
-    N(listOf("_  _", "|\\ |", "| \\|")),
-    O(listOf("____", "|  |", "|__|")),
-    P(listOf("___ ", "|__]", "|   ")),
-    Q(listOf("____", "|  |", "|_\\|")),
-    R(listOf("____", "|__/", "|  \\")),
-    S(listOf("____", "[__ ", "___]")),
-    T(listOf("___", " | ", " | ")),
-    U(listOf("_  _", "|  |", "|__|")),
-    V(listOf("_  _", "|  |", " \\/ ")),
-    W(listOf("_ _ _", "| | |", "|_|_|")),
-    X(listOf("_  _", " \\/ ", "_/\\_")),
-    Y(listOf("_   _", " \\_/ ", "  |  ")),
-    Z(listOf("___ ", "  / ", " /__"));
+class Fonts(file: File) {
+    val letters = with(Scanner(file)) {
+        val linesPer = nextInt()
+        val charsIn = nextInt()
+        List<Pair<Char, List<CharSequence>>>(charsIn) {
+            Pair(next().single().also { nextLine() }, List(linesPer) { nextLine() })
+        }.toMap()
+    }
+    val space: String? = letters['a']?.get(0)?.length.let { " ".repeat(it!!) }
 
     companion object {
-        val space = " ".repeat(4)
         val indent = 2
     }
 }
