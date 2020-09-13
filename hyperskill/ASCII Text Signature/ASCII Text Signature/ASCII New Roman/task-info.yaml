@@ -160,12 +160,6 @@ files:
         println("Hello, World!")
     }
   learner_created: false
-- name: src/signature/medium.txt
-  visible: true
-  learner_created: true
-- name: src/signature/roman.txt
-  visible: true
-  learner_created: true
 - name: test/Task4Test.kt
   visible: false
   text: |2
