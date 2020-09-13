@@ -6,12 +6,16 @@ hyperskill_project:
 stages:
 - id: 390
   step: 6173
+  is_completed: true
 - id: 391
   step: 6174
+  is_completed: true
 - id: 392
   step: 6175
+  is_completed: false
 - id: 393
   step: 6176
+  is_completed: false
 topics:
   0:
   - title: Computer programming
@@ -64,12 +68,12 @@ topics:
   - title: Repeating blocks
     theory_id: 4643
   2:
+  - title: Ranges
+    theory_id: 4633
   - title: String templates
     theory_id: 4547
   - title: Getting substrings
     theory_id: 8535
-  - title: Ranges
-    theory_id: 4633
   - title: When expression
     theory_id: 4631
   - title: For loop and ranges
@@ -91,6 +95,8 @@ topics:
   - title: EduTools
     theory_id: 5839
   3:
+  - title: Comments
+    theory_id: 4406
   - title: Coding style conventions
     theory_id: 4419
   - title: Naming variables

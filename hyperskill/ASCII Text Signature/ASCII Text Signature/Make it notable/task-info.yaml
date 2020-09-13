@@ -357,29 +357,4 @@ files:
   learner_created: false
 feedback_link: https://hyperskill.org/projects/71/stages/392/implement
 status: Failed
-feedback:
-  message: |-
-    Wrong answer in test #1
-
-    Your border is not rectangular.
-
-    Please find below the output of your program during this failed test.
-    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
-
-    ---
-
-     _____________
-    | Hyper Skill |
-     ¯¯¯¯¯¯¯¯¯¯¯¯¯
-    Enter name and surname: &gt; Bill Gates
-    Enter person&#39;s status: &gt; VIP
-    **************
-    * Bill Gates *
-    **************
-    *************************************************
-    * ___  _ _    _         ____ ____ ___ ____ ____ *
-    * |__] | |    |         | __ |__|  |  |___ [__  *
-    * |__] | |___ |___      |__] |  |  |  |___ ___] *
-    *************************************************
-  time: Thu, 20 Aug 2020 10:42:10 UTC
-record: 1
+record: -1
