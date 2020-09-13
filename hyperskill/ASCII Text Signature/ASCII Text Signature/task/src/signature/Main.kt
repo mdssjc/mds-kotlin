@@ -1,60 +1,75 @@
 package signature
 
 fun main() {
-    println(" _____________")
-    println("| Hyper Skill |")
-    println(" ¯¯¯¯¯¯¯¯¯¯¯¯¯")
-
     print("Enter name and surname: ")
-    val name = readLine()!!
+    val name = readLine()!!.trim()
 
     print("Enter person's status: ")
-    val status = readLine()!!
+    val status = readLine()!!.trim()
 
-    if (name != null && name.length > 2) {
-        val name = name.split(" ")
-        printName(name[0], name[1])
-    }
-
-    val topLetters = arrayOf("____", "___ ", "____", "___ ", "____", "____", "____", "_  _", "_", " _", "_  _", "_   ", "_  _", "_  _", "____", "___ ", "____", "____", "____", "___", "_  _", "_  _", "_ _ _", "_  _", "_   _", "___ ", "    ")
-    val middleLetters = arrayOf("|__|", "|__]", "|   ", "|  \\", "|___", "|___", "| __", "|__|", "|", " |", "|_/ ", "|   ", "|\\/|", "|\\ |", "|  |", "|__]", "|  |", "|__/", "[__ ", " | ", "|  |", "|  |", "| | |", " \\/ ", " \\_/ ", "  / ", "    ")
-    val bottomLetters = arrayOf("|  |", "|__]", "|___", "|__/", "|___", "|   ", "|__]", "|  |", "|", "_|", "| \\_", "|___", "|  |", "| \\|", "|__|", "|   ", "|_\\|", "|  \\", "___]", " | ", "|__|", " \\/ ", "|_|_|", "_/\\_", "  |  ", " /__", "    ")
-
-    var top = " "
-    var middle = " "
-    var bottom = " "
-    for (n in name) {
-        var i = n.toLowerCase().toInt() - 97
-        if (n == ' ') {
-            i = 26
-        }
-        top += topLetters[i] + " "
-        middle += middleLetters[i] + " "
-        bottom += bottomLetters[i] + " "
-    }
-
-    printSymbol(top.length + 2)
-    println("*$top*")
-    println("*$middle*")
-    println("*$bottom*")
-    print("*")
-    print(" ".repeat((top.length - status.length) / 2))
-    print(status)
-    print(" ".repeat((top.length - status.length) / 2))
-    println("*")
-    printSymbol(top.length + 2)
+    printSignature(name, status)
 }
 
-fun printName(firstName: String, lastName: String) {
-    val size = firstName.length + lastName.length + 5
-    printSymbol(size)
-    println("* $firstName $lastName *")
-    printSymbol(size)
+fun printSignature(name: String, status: String) {
+    val line = List(3) { mutableListOf<CharSequence>() }
+
+    for (ch in name.toUpperCase()) {
+        if (ch == ' ') line.forEach { it -> it.add(Font.space) } else
+            Font.valueOf(ch.toString()).run { line.forEachIndexed { i, ln -> ln.add(fontASCII[i]) } }
+    }
+    val print = Array(3) { i -> line[i].joinToString(" ") }
+
+    val asteriskLine = {
+        println("*".repeat(maxOf(print[0].length, status.length)
+                + Font.indent * 2 + 2))
+    }
+
+    fun statusIndent(right: Boolean = false): String {
+        val indentation = maxOf(print[0].length - status.length + Font.indent * 2, Font.indent * 2)
+        return " ".repeat(indentation / 2 + if (right) indentation % 2 else 0)
+    }
+
+    fun fontIndent(right: Boolean = false): String {
+        val indentation = status.length - print[0].length
+        return " ".repeat(maxOf(Font.indent, indentation / 2 + Font.indent + if (right) indentation % 2 else 0))
+    }
+
+    asteriskLine()
+    print.forEach { println("*${fontIndent()}$it${fontIndent(true)}*") }
+    println("*${statusIndent()}$status${statusIndent(true)}*")
+    asteriskLine()
 }
 
-fun printSymbol(size: Int) {
-    repeat(size) {
-        print("*")
+enum class Font(val fontASCII: List<CharSequence>) {
+    A(listOf("____", "|__|", "|  |")),
+    B(listOf("___ ", "|__]", "|__]")),
+    C(listOf("____", "|   ", "|___")),
+    D(listOf("___ ", "|  \\", "|__/")),
+    E(listOf("____", "|___", "|___")),
+    F(listOf("____", "|___", "|   ")),
+    G(listOf("____", "| __", "|__]")),
+    H(listOf("_  _", "|__|", "|  |")),
+    I(listOf("_", "|", "|")),
+    J(listOf(" _", " |", "_|")),
+    K(listOf("_  _", "|_/ ", "| \\_")),
+    L(listOf("_   ", "|   ", "|___")),
+    M(listOf("_  _", "|\\/|", "|  |")),
+    N(listOf("_  _", "|\\ |", "| \\|")),
+    O(listOf("____", "|  |", "|__|")),
+    P(listOf("___ ", "|__]", "|   ")),
+    Q(listOf("____", "|  |", "|_\\|")),
+    R(listOf("____", "|__/", "|  \\")),
+    S(listOf("____", "[__ ", "___]")),
+    T(listOf("___", " | ", " | ")),
+    U(listOf("_  _", "|  |", "|__|")),
+    V(listOf("_  _", "|  |", " \\/ ")),
+    W(listOf("_ _ _", "| | |", "|_|_|")),
+    X(listOf("_  _", " \\/ ", "_/\\_")),
+    Y(listOf("_   _", " \\_/ ", "  |  ")),
+    Z(listOf("___ ", "  / ", " /__"));
+
+    companion object {
+        val space = " ".repeat(4)
+        val indent = 2
     }
-    println()
 }

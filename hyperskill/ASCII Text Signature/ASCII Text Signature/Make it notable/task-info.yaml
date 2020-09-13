@@ -247,75 +247,6 @@ files:
         return framed(centeredLines(lines))
     }
   learner_created: false
-- name: test/Task2Test.kt
-  visible: false
-  text: |2
-
-    import org.hyperskill.hstest.testcase.CheckResult
-
-
-    class Task2Test : GeneratorTest<InputClue>() {
-
-        override fun generate() = listOf(
-                inputCase("Albert Einstein"),
-                inputCase("Nikola Tesla"),
-                inputCase("XXXX yyyyyyyyyy", true),
-                inputCase("Ivan Ivanov", true),
-                inputCase("a a", true)
-        )
-
-        private inline fun checkBadgeBorder(badge: String, onFailure: (msg: String) -> Unit) {
-            val lines = badge.split("\n")
-
-            if (lines.map { it.length }.toSet().size != 1) {
-                onFailure("Your border is not rectangular.")
-                return
-            }
-            if (lines.size < 2) {
-                onFailure("Your border is not rectangular.")
-                return
-            }
-            if (lines.first().any { it != '*' } || lines.last() != lines.first()) {
-                onFailure("Your top and bottom edges don't consist of '*'.")
-                return
-            }
-            if (!lines.drop(1).dropLast(1).all { it.startsWith("* ") && it.endsWith(" *") }) {
-                onFailure("Your left and right edges don't consist of '*' with one space padding.")
-                return
-            }
-        }
-
-
-        override fun check(reply: String, clue: InputClue): CheckResult {
-            val badgeStart = reply.indexOf('*')
-            if (badgeStart == -1) {
-                return CheckResult.wrong("Your output doesn't contain a badge, wrapped in '*' symbols.")
-            }
-
-            val userBadge = reply
-                    .substring(badgeStart)
-                    .trim('\n', ' ')
-
-            checkBadgeBorder(userBadge) { errorMessage ->
-                return CheckResult.wrong(errorMessage)
-            }
-
-
-            val name = clue.input.trim().split(' ').filter { it != "" }.joinToString(" ")
-
-            val badge = "*".repeat(name.length + 4) + "\n" +
-                    "* $name *\n" +
-                    "*".repeat(name.length + 4)
-
-
-            if (badge != userBadge) {
-                return clue.toFailure("Wrong output for the input line \"${clue.input}\".")
-            } else {
-                return CheckResult.correct()
-            }
-        }
-    }
-  learner_created: false
 - name: src/signature/Main.kt
   visible: true
   text: |
@@ -325,36 +256,10 @@ files:
         println("Hello, World!")
     }
   learner_created: false
-- name: test/Task1Test.kt
-  visible: false
-  text: |2+
-
-    import org.hyperskill.hstest.testcase.CheckResult
-
-
-    class Task1Test : GeneratorTest<Unit>() {
-
-        override fun generate() = listOf(
-                testCase(Unit, "")
-        )
-
-        override fun check(reply: String, clue: Unit): CheckResult {
-            val badge = " _____________\n" +
-                    "| Hyper Skill |\n" +
-                    " ¯¯¯¯¯¯¯¯¯¯¯¯¯"
-
-            if (reply.trim('\n', ' ') != badge.trim(' ')) {
-                return CheckResult.wrong(
-                        "Your output is wrong! " +
-                                "See example #1.")
-            } else {
-                return CheckResult.correct()
-            }
-
-        }
-    }
-
-  learner_created: false
 feedback_link: https://hyperskill.org/projects/71/stages/392/implement
-status: Failed
-record: -1
+status: Solved
+feedback:
+  message: Congratulations! Continue on <a href="https://hyperskill.org/projects/71/stages/392/implement">JetBrains
+    Academy</a>
+  time: Sun, 13 Sep 2020 14:18:52 UTC
+record: 3
