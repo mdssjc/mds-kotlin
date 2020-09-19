@@ -5,21 +5,52 @@ import kotlin.math.abs
 
 fun main() {
     val scanner = Scanner(System.`in`)
-    print("Enter cells:")
-    val symbols = scanner.nextLine()
+    print("Enter cells: ")
+    val cells = scanner.nextLine()
 
+    printCells(cells)
+
+    print("Enter the coordinates: ")
+    var row: Int
+    var column: Int
+    var isErr = false
+
+    do {
+        row = scanner.nextInt()
+        column = scanner.nextInt()
+
+        isErr = if (row > 3 || column > 3) {
+            println("Coordinates should be from 1 to 3!")
+            true
+        } else if (cells[getPosition(row, column)] != '_') {
+            println("This cell is occupied! Choose another one!")
+            true
+        } else {
+            false
+        }
+    } while (isErr)
+
+    val position = getPosition(row, column)
+    printCells(cells.substring(0, position) + "X" + cells.substring(position + 1))
+}
+
+fun getPosition(row: Int, column: Int) = (row - 1) * 3 + column - 1
+
+fun printCells(cells: String) {
     println("---------")
-    for (i in 0..2) {
-        val row = i * 3
-        println("| ${symbols[row]} ${symbols[row + 1]} ${symbols[row + 2]} |")
+    for (row in 0..2) {
+        val column = row * 3
+        println("| ${cells[column]} ${cells[column + 1]} ${cells[column + 2]} |")
     }
     println("---------")
+}
 
+fun finishGame(symbols: String) {
     var winX = 0
     var winO = 0
-    var countX = symbols.count { l -> l == 'X' }
-    var countO = symbols.count { l -> l == 'O' }
-    var complete = symbols.indexOf("_") == -1
+    val countX = symbols.count { l -> l == 'X' }
+    val countO = symbols.count { l -> l == 'O' }
+    val complete = symbols.indexOf("_") == -1
 
     for (i in 0..2) {
         val row = i * 3
