@@ -5,33 +5,37 @@ import kotlin.math.abs
 
 fun main() {
     val scanner = Scanner(System.`in`)
-    print("Enter cells: ")
-    val cells = scanner.nextLine()
+    var cells = "_________"
 
     printCells(cells)
 
-    print("Enter the coordinates: ")
-    var row: Int
-    var column: Int
-    var isErr = false
+    var player = 1
 
     do {
-        row = scanner.nextInt()
-        column = scanner.nextInt()
+        print("Enter the coordinates: ")
+        val position = getPosition(scanner.nextInt(), scanner.nextInt())
 
-        isErr = if (row > 3 || column > 3) {
-            println("Coordinates should be from 1 to 3!")
-            true
-        } else if (cells[getPosition(row, column)] != '_') {
-            println("This cell is occupied! Choose another one!")
-            true
-        } else {
-            false
+        when {
+            position > 8 -> {
+                println("Coordinates should be from 1 to 3!")
+            }
+            cells[position] != '_' -> {
+                println("This cell is occupied! Choose another one!")
+            }
+            else -> {
+                cells = cells.substring(0, position) + (if (player == 1) "X" else "O") + cells.substring(position + 1)
+                player = if (player == 1) 2 else 1
+
+                printCells(cells)
+                val result = finishGame(cells)
+
+                if (result != "Game not finished") {
+                    println(result)
+                    break
+                }
+            }
         }
-    } while (isErr)
-
-    val position = getPosition(row, column)
-    printCells(cells.substring(0, position) + "X" + cells.substring(position + 1))
+    } while (true)
 }
 
 fun getPosition(row: Int, column: Int) = (row - 1) * 3 + column - 1
@@ -45,7 +49,7 @@ fun printCells(cells: String) {
     println("---------")
 }
 
-fun finishGame(symbols: String) {
+fun finishGame(symbols: String): String {
     var winX = 0
     var winO = 0
     val countX = symbols.count { l -> l == 'X' }
@@ -73,15 +77,15 @@ fun finishGame(symbols: String) {
         winO++
     }
 
-    if (winX == 1 && winO == 0) {
-        println("X wins")
-    } else if (winX == 0 && winO == 1) {
-        println("O wins")
+    return if (winX >= 1 && winO == 0) {
+        "X wins"
+    } else if (winX == 0 && winO >= 1) {
+        "O wins"
     } else if (winX > 0 && winO > 0 || abs(countX - countO) > 1) {
-        println("Impossible")
+        "Impossible"
     } else if (complete) {
-        println("Draw")
+        "Draw"
     } else {
-        println("Game not finished")
+        "Game not finished"
     }
 }
