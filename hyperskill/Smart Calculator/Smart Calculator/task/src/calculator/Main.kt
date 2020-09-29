@@ -8,10 +8,11 @@ fun main() {
 
     while (input != "/exit") {
         val inputs = input.split(" ")
-        if (inputs.size == 2) {
-            val a = inputs[0].toInt()
-            val b = inputs[1].toInt()
-            println(a + b)
+        if (input == "/help") {
+            println("The program calculates the sum of numbers")
+        } else if (inputs.size > 1) {
+            val result = inputs.map { a -> a.toInt() }.sum()
+            println(result)
         } else if (input.isNotBlank()) {
             println(input)
         }

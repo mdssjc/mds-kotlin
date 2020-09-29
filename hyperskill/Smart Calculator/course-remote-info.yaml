@@ -12,10 +12,10 @@ stages:
   is_completed: true
 - id: 488
   step: 7811
-  is_completed: false
+  is_completed: true
 - id: 489
   step: 7812
-  is_completed: false
+  is_completed: true
 - id: 490
   step: 7813
   is_completed: false
@@ -116,6 +116,8 @@ topics:
     theory_id: 7243
   - title: Taming exceptions
     theory_id: 7601
+  - title: The try-catch statement
+    theory_id: 10622
   5:
   - title: Introduction to collections
     theory_id: 10390
