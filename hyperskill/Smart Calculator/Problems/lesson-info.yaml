@@ -3,3 +3,4 @@ content:
 - Handle arithmetic exception
 - Handle string exception
 - Handle number format exception
+- Handling strings

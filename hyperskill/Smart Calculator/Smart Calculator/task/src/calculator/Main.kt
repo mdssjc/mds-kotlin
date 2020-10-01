@@ -4,22 +4,33 @@ import java.util.*
 
 fun main() {
     val scanner = Scanner(System.`in`)
-    var input = scanner.nextLine()
 
-    while (input != "/exit") {
-        val inputs = input.split(" ")
-        if (input == "/help") {
-            println("The program calculates the addition + and subtraction - operators")
-        } else if (inputs.size > 1) {
-            println(calc(inputs))
-        } else if (input.isNotBlank()) {
-            println(input)
+    do {
+        val input = scanner.nextLine()
+
+        if (input.startsWith("/")) {
+            println(
+                when (input) {
+                    "/help" -> "The program calculates the addition + and subtraction - operators"
+                    "/exit" -> "Bye!"
+                    else -> "Unknown command"
+                }
+            )
+        } else {
+            val inputs = input.split(" ")
+
+            try {
+                if (inputs.size > 1) {
+                    println(calc(inputs))
+                } else if (input.isNotBlank()) {
+                    println(input.toInt())
+                }
+            } catch (e: Exception) {
+                println("Invalid expression")
+            }
         }
 
-        input = scanner.nextLine()
-    }
-
-    println("Bye!")
+    } while (input != "/exit")
 }
 
 fun calc(inputs: List<String>): Int {
