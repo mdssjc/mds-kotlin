@@ -5,3 +5,4 @@ content:
 - Handle number format exception
 - Handling strings
 - Exception message
+- Converter to Double
