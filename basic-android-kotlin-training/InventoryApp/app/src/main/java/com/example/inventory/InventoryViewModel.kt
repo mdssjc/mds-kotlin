@@ -1,8 +1,6 @@
 package com.example.inventory
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemDao
 import kotlinx.coroutines.launch
@@ -11,6 +9,8 @@ import kotlinx.coroutines.launch
  * View Model to keep a reference to the Inventory repository and an up-to-date list of all items.
  */
 class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
+
+    val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
 
     /**
      * Inserts the new Item into database.
@@ -31,6 +31,52 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     }
 
     /**
+     * Retrieve an item from the repository.
+     */
+    fun retrieveItem(id: Int): LiveData<Item> {
+        return itemDao.getItem(id).asLiveData()
+    }
+
+    /**
+     * Decreases the stock by one unit and updates the database.
+     */
+    fun sellItem(item: Item) {
+        if (item.quantityInStock > 0) {
+            val newItem = item.copy(quantityInStock = item.quantityInStock - 1)
+            updateItem(newItem)
+        }
+    }
+
+    /**
+     * Returns true if stock is available to sell, false otherwise.
+     */
+    fun isStockAvailable(item: Item): Boolean {
+        return (item.quantityInStock > 0)
+    }
+
+    /**
+     * Launching a new coroutine to delete an item in a non-blocking way
+     */
+    fun deleteItem(item: Item) {
+        viewModelScope.launch {
+            itemDao.delete(item)
+        }
+    }
+
+    /**
+     * Updates an existing Item in the database.
+     */
+    fun updateItem(
+        itemId: Int,
+        itemName: String,
+        itemPrice: String,
+        itemCount: String
+    ) {
+        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemPrice, itemCount)
+        updateItem(updatedItem)
+    }
+
+    /**
      * Launching a new coroutine to insert an item in a non-blocking way
      */
     private fun insertItem(item: Item) {
@@ -40,11 +86,38 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     }
 
     /**
+     * Launching a new coroutine to update an item in a non-blocking way
+     */
+    private fun updateItem(item: Item) {
+        viewModelScope.launch {
+            itemDao.update(item)
+        }
+    }
+
+    /**
      * Returns an instance of the [Item] entity class with the item info entered by the user.
      * This will be used to add a new entry to the Inventory database.
      */
     private fun getNewItemEntry(itemName: String, itemPrice: String, itemCount: String): Item {
         return Item(
+            itemName = itemName,
+            itemPrice = itemPrice.toDouble(),
+            quantityInStock = itemCount.toInt()
+        )
+    }
+
+    /**
+     * Called to update an existing entry in the Inventory database.
+     * Returns an instance of the [Item] entity class with the item info updated by the user.
+     */
+    private fun getUpdatedItemEntry(
+        itemId: Int,
+        itemName: String,
+        itemPrice: String,
+        itemCount: String
+    ): Item {
+        return Item(
+            id = itemId,
             itemName = itemName,
             itemPrice = itemPrice.toDouble(),
             quantityInStock = itemCount.toInt()
